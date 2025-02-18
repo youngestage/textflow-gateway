@@ -8,13 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { translateText, summarizeText } from "@/services/ai";
 import { Loader2 } from "lucide-react";
 
 type MessageBubbleProps = {
   message: Message;
+  defaultLanguage: Language;
 };
 
 const languages: Record<Language, string> = {
@@ -26,9 +27,13 @@ const languages: Record<Language, string> = {
   fr: "French",
 };
 
-export const MessageBubble = ({ message }: MessageBubbleProps) => {
+export const MessageBubble = ({ message, defaultLanguage }: MessageBubbleProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>("en");
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(defaultLanguage);
+
+  useEffect(() => {
+    setSelectedLanguage(defaultLanguage);
+  }, [defaultLanguage]);
 
   const handleTranslate = async () => {
     try {

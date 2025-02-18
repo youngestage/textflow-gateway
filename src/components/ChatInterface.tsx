@@ -4,15 +4,17 @@ import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Send } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
-import { Message } from "@/types";
+import { Language, Message } from "@/types";
 import { detectLanguage } from "@/services/ai";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
+import { LanguageHeader } from "./LanguageHeader";
 
 export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
 
   const handleSend = async () => {
     if (!input.trim()) {
@@ -47,9 +49,17 @@ export const ChatInterface = () => {
 
   return (
     <div className="h-screen flex flex-col">
+      <LanguageHeader
+        currentLanguage={currentLanguage}
+        onLanguageChange={setCurrentLanguage}
+      />
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
+          <MessageBubble 
+            key={message.id} 
+            message={message}
+            defaultLanguage={currentLanguage}
+          />
         ))}
       </div>
 

@@ -9,6 +9,7 @@ import { detectLanguage } from "@/services/ai";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
 import { LanguageHeader } from "./LanguageHeader";
+import { ChromeAIBanner } from "./ChromeAIBanner";
 
 export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -34,7 +35,11 @@ export const ChatInterface = () => {
       setMessages((prev) => [...prev, newMessage]);
       setInput("");
     } catch (error) {
-      toast.error("Failed to process message. Please try again.");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to process message. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -53,6 +58,7 @@ export const ChatInterface = () => {
         currentLanguage={currentLanguage}
         onLanguageChange={setCurrentLanguage}
       />
+      <ChromeAIBanner />
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <MessageBubble 
